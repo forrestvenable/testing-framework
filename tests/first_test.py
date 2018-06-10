@@ -1,4 +1,6 @@
 import unittest
+import element
+import page
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -6,14 +8,15 @@ class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
+        self.page = page.Page("Homepage","http://www.python.org", self.driver)
+        self.elem = element.Element("Search", "Search bar", "q")
 
     def test_search_in_python_org(self):
-        driver = self.driver
-        driver.get("http://www.python.org")
-        self.assertIn("Python", driver.title)
+        self.page.goto()
+        self.assertIn("Python", self.page.title())
         elem = driver.find_element_by_name("q")
-        elem.send_keys("pycon")
-        elem.send_keys(Keys.RETURN)
+        elem.input("pycon")
+        elem.input(Keys.RETURN)
         assert "No results found." not in driver.page_source
 
 
