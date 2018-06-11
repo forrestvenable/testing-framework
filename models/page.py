@@ -1,8 +1,9 @@
+import driver
+
 class Page:
-	def __init__(self, name, url, driver):
+	def __init__(self, name, url):
 		self.name = name
 		self.url = url
-		self.driver = driver
 
 	def goto(self):
-		self.driver.get(self.url)
+		driver.get(self.url)

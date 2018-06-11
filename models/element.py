@@ -1,9 +1,10 @@
+import driver
+
 class Element:
-	def __init__(self, name, description, selector, driver):
+	def __init__(self, name, description, selector):
 		self.name = name
 		self.description = description
 		self.selector = selector
-		self.driver = driver
 		self._selenium_element = None
 
 	def input(self, string):
@@ -23,7 +24,6 @@ class Element:
 	def _lazy_find(self):
 		elem = self._selenium_element
 		if(not elem):
-			driver = self.driver
 			elem = driver.find_element_by_css_selector(self.selector)
 		return elem
 
