@@ -1,7 +1,7 @@
 import unittest
 from models import driver, webpage, element, db
 
-class FirstTest(unittest.TestCase):
+class SmokeTest(unittest.TestCase):
 
     def setUp(self):
         driver.connect()
