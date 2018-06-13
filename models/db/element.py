@@ -31,3 +31,13 @@ def select(name):
 	result = cursor.fetchone()
 	cursor.close()
 	return Element(result)
+
+def select_by_page_id(page_id)
+	cursor = database.connection.cursor()
+	cursor.execute("SELECT * FROM elements WHERE page_id = %s",
+		(page_id,))
+	results = []
+	while (row = cursor.fetchone()):
+		results.append(Element(row))
+
+	return results

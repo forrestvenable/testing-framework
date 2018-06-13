@@ -1,10 +1,11 @@
-from . import database
+from . import database, element
 
 class Page:
 	def __init__(self, row):
 		self.id = row[0]
 		self.name = row[1]
 		self.url = row[2]
+		self.elements = []
 
 	def insert(self):
 		cursor = database.connection.cursor()
@@ -21,6 +22,9 @@ class Page:
 			(self.id,))
 		database.connection.commit()	
 		cursor.close()
+
+	def load_elements(self):
+		self.elements = element.select_by_page_id(self.id)
 
 def select(name):
 	cursor = database.connection.cursor()
