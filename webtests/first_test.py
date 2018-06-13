@@ -1,31 +1,28 @@
 import unittest
-from models import database, driver, webpage, element
+from models import driver, webpage, element, db
 
 class FirstTest(unittest.TestCase):
 
     def setUp(self):
-
         driver.connect()
-        database.database.connect()
-        database.database.insert_page(webpage.WebPage("Homepage","http://www.python.org"))
-        database.database.insert_element(element.Element("Search", "Search bar", "#id-search-field"))
-        database.database.insert_element(element.Element("SearchButton", "Search bar button", ".search-button"))
+        db.database.connect()
+        self.page = db.page.Page([None, "Homepage","http://www.python.org"]).insert()
+        self.search_bar = db.element.Element([None, "Search", "Search bar", "#id-search-field", self.page.id]).insert()
+        self.search_button = db.element.Element([None, "SearchButton", "Search bar button", ".search-button", self.page.id]).insert()
 
     def test_search_in_python_org(self):
-        database.database.select_page("Homepage").goto()
-        search = database.database.select_element("Search")
-        search.input("pycon")
-        button = database.database.select_element("SearchButton")
-        button.click()
+        webpage.WebPage(db.page.select("Homepage")).goto()
+        element.Element(db.element.select("Search")).input("pycon")
+        element.Element(db.element.select("SearchButton")).click()
         assert "No results found." not in driver.driver.page_source
 
 
     def tearDown(self):
         driver.disconnect()
-        database.database.delete_page("Homepage")
-        database.database.delete_page("Search")
-        database.database.delete_page("SearchButton")
-        database.database.disconnect()
+        self.page.delete()
+        self.search_bar.delete()
+        self.search_button.delete()
+        db.database.disconnect()
 
 if __name__ == "__main__":
     unittest.main()
