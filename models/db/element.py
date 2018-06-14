@@ -37,7 +37,7 @@ def select_by_page_id(page_id):
 	cursor.execute("SELECT * FROM elements WHERE page_id = %s",
 		(page_id,))
 	results = []
-	while (true):
+	while (1):
 		row = cursor.fetchone()
 		if(row):
 			results.append(Element(row))

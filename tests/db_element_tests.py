@@ -1,28 +1,30 @@
 import unittest
-from models.db import database,element,select_element
+from models.db import database,element,select_element, select_element_by_page_id, page
 
 class DbPageTests(unittest.TestCase):
 
     def setUp(self):
         database.connect()
+        self.cursor = database.connection.cursor()
+        self.webpage1 = page([None, "Homepage","http://www.python.org"]).insert()
+        self.webpage2 = page([None, "Google","http://www.google.com"]).insert()
 
     def test_insert_adds_one_row(self):
-        cursor = database.connection.cursor()
-        cursor.execute("SELECT Count(*) FROM elements")
-        initial_count = cursor.fetchone()[0]
+        self.cursor.execute("SELECT Count(*) FROM elements")
+        initial_count = self.cursor.fetchone()[0]
         element([None, "Search", "Search bar", "#id-search-field", None]).insert()
-        cursor.execute("SELECT Count(*) FROM elements")
-        new_count = cursor.fetchone()[0]
+        self.cursor.execute("SELECT Count(*) FROM elements")
+        new_count = self.cursor.fetchone()[0]
         assert (initial_count + 1) == new_count
 
     def test_delete_removes_one_row(self):
-        cursor = database.connection.cursor()
+        self.cursor = database.connection.cursor()
         webelement = element([None, "Search", "Search bar", "#id-search-field", None]).insert()
-        cursor.execute("SELECT Count(*) FROM elements")
-        initial_count = cursor.fetchone()[0]
+        self.cursor.execute("SELECT Count(*) FROM elements")
+        initial_count = self.cursor.fetchone()[0]
         webelement.delete()
-        cursor.execute("SELECT Count(*) FROM elements")
-        new_count = cursor.fetchone()[0]
+        self.cursor.execute("SELECT Count(*) FROM elements")
+        new_count = self.cursor.fetchone()[0]
         assert (initial_count - 1) == new_count
 
     def test_insert_only_updates_element_id(self):
@@ -44,11 +46,21 @@ class DbPageTests(unittest.TestCase):
         assert inserted_element.description == selected_element.description
         assert inserted_element.selector == selected_element.selector
 
+    def test_select_by_page_id(self):
+    	element1 = element([None, "Search", "Search bar", "#id-search-field", self.webpage1.id]).insert()
+    	element2 = element([None, "Search", "Search bar", "#id-search-field", self.webpage2.id]).insert()
+
+    	elements = select_element_by_page_id(self.webpage1.id)
+    	assert elements[0].page_id == self.webpage1.id
+    	assert len(elements) == 1 
+
 
     def tearDown(self):
-        cursor = database.connection.cursor()
-        cursor.execute("TRUNCATE TABLE elements")
+        self.cursor.execute("TRUNCATE TABLE elements")
         database.connection.commit()
+        self.cursor.execute("TRUNCATE TABLE pages")
+        database.connection.commit()
+        self.cursor.close()
         database.disconnect()
 
 if __name__ == "__main__":
