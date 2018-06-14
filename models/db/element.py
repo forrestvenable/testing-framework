@@ -32,12 +32,16 @@ def select(name):
 	cursor.close()
 	return Element(result)
 
-def select_by_page_id(page_id)
+def select_by_page_id(page_id):
 	cursor = database.connection.cursor()
 	cursor.execute("SELECT * FROM elements WHERE page_id = %s",
 		(page_id,))
 	results = []
-	while (row = cursor.fetchone()):
-		results.append(Element(row))
+	while (true):
+		row = cursor.fetchone()
+		if(row):
+			results.append(Element(row))
+		else:
+			break
 
 	return results

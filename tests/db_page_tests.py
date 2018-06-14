@@ -1,48 +1,52 @@
 import unittest
-from models import db
+from models.db import database,page,select_page
 
 class DbPageTests(unittest.TestCase):
 
     def setUp(self):
-        db.connect()
+        database.connect()
 
-    def insert_adds_one_row(self):
+    def test_insert_adds_one_row(self):
         cursor = database.connection.cursor()
         cursor.execute("SELECT Count(*) FROM pages")
         initial_count = cursor.fetchone()[0]
-        self.page = db.page([None, "Homepage","http://www.python.org"]).insert()
+        page([None, "Homepage","http://www.python.org"]).insert()
         cursor.execute("SELECT Count(*) FROM pages")
         new_count = cursor.fetchone()[0]
         assert (initial_count + 1) == new_count
 
-    def delete_removes_one_row(self):
+    def test_delete_removes_one_row(self):
         cursor = database.connection.cursor()
-        self.page = db.page([None, "Homepage","http://www.python.org"]).insert()
+        webpage = page([None, "Homepage","http://www.python.org"]).insert()
         cursor.execute("SELECT Count(*) FROM pages")
         initial_count = cursor.fetchone()[0]
-        self.page.delete()
+        webpage.delete()
         cursor.execute("SELECT Count(*) FROM pages")
         new_count = cursor.fetchone()[0]
         assert (initial_count - 1) == new_count
 
-    def insert_only_updates_page_id(self):
-        self.page = db.page([None, "Homepage","http://www.python.org"])
-        assert self.page.id == None && self.page.name == "Homepage" && self.page.url == "http://www.python.org"
-        self.page.insert()
-        assert self.page.name == "Homepage" && self.page.url == "http://www.python.org"
-        assert self.page.id != None
+    def test_insert_only_updates_page_id(self):
+        webpage = page([None, "Homepage","http://www.python.org"])
+        assert webpage.id == None
+        assert webpage.name == "Homepage"
+        assert webpage.url == "http://www.python.org"
+        webpage.insert()
+        assert webpage.name == "Homepage" 
+        assert webpage.url == "http://www.python.org"
+        assert webpage.id != None
 
-    def select_finds_record(self):
-        self.page = db.page([None, "Homepage","http://www.python.org"]).insert()
-        inserted_page = self.page
-        selected_page = db.select(self.page.name)
-        assert inserted_page.name == selected_page.name && inserted_page.url == selected_page.url
+    def test_select_finds_record(self):
+        inserted_page = page([None, "Homepage","http://www.python.org"]).insert()
+        selected_page = select_page(inserted_page.name)
+        assert inserted_page.name == selected_page.name 
+        assert inserted_page.url == selected_page.url
 
 
     def tearDown(self):
-        driver.disconnect()
-        self.page.delete()
-        db.disconnect()
+        cursor = database.connection.cursor()
+        cursor.execute("TRUNCATE TABLE pages")
+        database.connection.commit()
+        database.disconnect()
 
 if __name__ == "__main__":
     unittest.main()

@@ -10,7 +10,7 @@ class SmokeTest(unittest.TestCase):
         self.search_bar = db.element([None, "Search", "Search bar", "#id-search-field", self.page.id]).insert()
         self.search_button = db.element([None, "SearchButton", "Search bar button", ".search-button", self.page.id]).insert()
 
-    def test_search_in_python_org(self):
+    def runTest(self):
         webpage.WebPage(db.select_page("Homepage")).goto()
         element.Element(db.select_element("Search")).input("pycon")
         element.Element(db.select_element("SearchButton")).click()
