@@ -1,5 +1,5 @@
 import unittest
-from models.db import database,element,select_element, select_element_by_page_id, page
+from models.db import database,element,select_element, page
 
 class DbPageTests(unittest.TestCase):
 
@@ -48,11 +48,16 @@ class DbPageTests(unittest.TestCase):
 
     def test_select_by_page_id(self):
     	element1 = element([None, "Search", "Search bar", "#id-search-field", self.webpage1.id]).insert()
+    	element1 = element([None, "Element", "Element", "#some-element", self.webpage1.id]).insert()
     	element2 = element([None, "Search", "Search bar", "#id-search-field", self.webpage2.id]).insert()
 
-    	elements = select_element_by_page_id(self.webpage1.id)
+    	elements = self.webpage1.load_elements()
     	assert elements[0].page_id == self.webpage1.id
-    	assert len(elements) == 1 
+    	assert elements[1].name == "Element"
+    	assert elements[1].description == "Element"
+    	assert elements[1].selector == "#some-element"
+    	assert elements[1].page_id == self.webpage1.id
+    	assert len(elements) == 2
 
 
     def tearDown(self):

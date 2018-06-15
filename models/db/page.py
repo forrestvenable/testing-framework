@@ -25,6 +25,7 @@ class Page:
 
 	def load_elements(self):
 		self.elements = element.select_by_page_id(self.id)
+		return self.elements
 
 def select(name):
 	cursor = database.connection.cursor()
