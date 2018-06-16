@@ -24,7 +24,18 @@ class Page:
 		cursor.close()
 
 	def load_elements(self):
-		self.elements = element.select_by_page_id(self.id)
+		cursor = database.connection.cursor()
+		cursor.execute("SELECT * FROM elements WHERE page_id = %s",
+			(self.id,))
+		results = []
+		while (1):
+			row = cursor.fetchone()
+			if(row):
+				results.append(element.Element(row))
+			else:
+				break
+
+		self.elements = results
 		return self.elements
 
 def select(name):

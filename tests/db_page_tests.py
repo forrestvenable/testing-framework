@@ -1,5 +1,5 @@
 import unittest
-from models.db import database,page,select_page
+from models.db import database,page,select_page, element
 
 class DbPageTests(unittest.TestCase):
 
@@ -41,10 +41,27 @@ class DbPageTests(unittest.TestCase):
         assert inserted_page.name == selected_page.name 
         assert inserted_page.url == selected_page.url
 
+    def test_select_by_page_id(self):
+        webpage1 = page([None, "Google","http://www.google.com"]).insert()
+        webpage2 = page([None, "Homepage","http://www.python.org"]).insert()
+
+        element1 = element([None, "Search", "Search bar", "#id-search-field", webpage1.id]).insert()
+        element1 = element([None, "Element", "Element", "#some-element", webpage1.id]).insert()
+        element2 = element([None, "Search", "Search bar", "#id-search-field", webpage2.id]).insert()
+
+        elements = webpage1.load_elements()
+        assert elements[0].page_id == webpage1.id
+        assert elements[1].name == "Element"
+        assert elements[1].description == "Element"
+        assert elements[1].selector == "#some-element"
+        assert elements[1].page_id == webpage1.id
+        assert len(elements) == 2
+
 
     def tearDown(self):
         cursor = database.connection.cursor()
         cursor.execute("TRUNCATE TABLE pages")
+        cursor.execute("TRUNCATE TABLE elements")
         database.connection.commit()
         database.disconnect()
 
