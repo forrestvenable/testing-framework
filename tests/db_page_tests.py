@@ -46,8 +46,8 @@ class DbPageTests(unittest.TestCase):
         webpage2 = page([None, "Homepage","http://www.python.org"]).insert()
 
         element1 = element([None, "Search", "Search bar", "#id-search-field", webpage1.id]).insert()
-        element1 = element([None, "Element", "Element", "#some-element", webpage1.id]).insert()
-        element2 = element([None, "Search", "Search bar", "#id-search-field", webpage2.id]).insert()
+        element2 = element([None, "Element", "Element", "#some-element", webpage1.id]).insert()
+        element3 = element([None, "Search", "Search bar", "#id-search-field", webpage2.id]).insert()
 
         elements = webpage1.load_elements()
         assert elements[0].page_id == webpage1.id
@@ -57,12 +57,18 @@ class DbPageTests(unittest.TestCase):
         assert elements[1].page_id == webpage1.id
         assert len(elements) == 2
 
+    def test_select_component_elements(self):
+        webpage1 = page([None, "Google","http://www.google.com"]).insert()
+
 
     def tearDown(self):
-        cursor = database.connection.cursor()
-        cursor.execute("TRUNCATE TABLE pages")
-        cursor.execute("TRUNCATE TABLE elements")
+        self.cursor.execute("TRUNCATE TABLE elements")
         database.connection.commit()
+        self.cursor.execute("TRUNCATE TABLE components")
+        database.connection.commit()
+        self.cursor.execute("TRUNCATE TABLE pages")
+        database.connection.commit()
+        self.cursor.close()
         database.disconnect()
 
 if __name__ == "__main__":

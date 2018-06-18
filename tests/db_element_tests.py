@@ -1,7 +1,7 @@
 import unittest
 from models.db import database,element,select_element, page
 
-class DbPageTests(unittest.TestCase):
+class DbElementTests(unittest.TestCase):
 
     def setUp(self):
         database.connect()
@@ -46,22 +46,13 @@ class DbPageTests(unittest.TestCase):
         assert inserted_element.description == selected_element.description
         assert inserted_element.selector == selected_element.selector
 
-    def test_select_by_page_id(self):
-    	element1 = element([None, "Search", "Search bar", "#id-search-field", self.webpage1.id]).insert()
-    	element1 = element([None, "Element", "Element", "#some-element", self.webpage1.id]).insert()
-    	element2 = element([None, "Search", "Search bar", "#id-search-field", self.webpage2.id]).insert()
 
-    	elements = self.webpage1.load_elements()
-    	assert elements[0].page_id == self.webpage1.id
-    	assert elements[1].name == "Element"
-    	assert elements[1].description == "Element"
-    	assert elements[1].selector == "#some-element"
-    	assert elements[1].page_id == self.webpage1.id
-    	assert len(elements) == 2
 
 
     def tearDown(self):
         self.cursor.execute("TRUNCATE TABLE elements")
+        database.connection.commit()
+        self.cursor.execute("TRUNCATE TABLE components")
         database.connection.commit()
         self.cursor.execute("TRUNCATE TABLE pages")
         database.connection.commit()

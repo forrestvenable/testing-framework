@@ -29,7 +29,7 @@ class Page:
 
 	def load_elements(self):
 		cursor = database.connection.cursor()
-		cursor.execute("SELECT * FROM elements WHERE page_id = %s OR component_id IN (SELECT DISTINCT id FROM components WHERE page_id = %s)",
+		cursor.execute("SELECT * FROM elements WHERE page_id = %s OR component_id IN (SELECT DISTINCT component_id FROM pages_components WHERE page_id = %s)",
 			(self.id, self.id))
 		results = []
 		while (1):
@@ -38,7 +38,6 @@ class Page:
 				results.append(element.Element(row))
 			else:
 				break
-		while (1):
 
 
 		self.elements = results

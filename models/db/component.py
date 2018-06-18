@@ -1,10 +1,11 @@
-from . import database, element
+from . import database, element, page
 
 class Component:
-	def __init__(self, row):
+	def __init__(self, row, pages = []):
 		self.id = row[0]
 		self.name = row[1]
 		self.elements = []
+		self.pages = []
 
 	def insert(self):
 		cursor = database.connection.cursor()
@@ -38,3 +39,23 @@ class Component:
 
 		self.elements = results
 		return self.elements
+
+	def load_pages(self):
+		cursor = database.connection.cursor()
+		cursor.execute("SELECT * FROM pages WHERE id IN (SELECT DISTINCT page_id FROM pages_components WHERE component_id = %s)",
+			(self.id,))
+		results = []
+		while (1):
+			row = cursor.fetchone()
+			if(row):
+				results.append(page.Page(row))
+			else:
+				break
+
+		self.elements = results
+		return self.elements
+
+	def insert_into_page(self, webpage):
+		cursor = database.connection.cursor()
+		cursor.execute("INSERT INTO pages_components (page_id, component_id) VALUES (%s, %s)",
+			(webpage.id, self.id))
