@@ -18,7 +18,7 @@ class Page:
 
 	def delete(self):
 		cursor = database.connection.cursor()
-		cursor.execute("DELETE FROM elements WHERE component_id IN (SELECT DISTINCT id FROM components WHERE page_id = %s)",
+		cursor.execute("DELETE FROM elements WHERE component_id IN (SELECT DISTINCT component_id FROM pages_components WHERE page_id = %s)",
 			(self.id,))
 		cursor.execute("DELETE FROM components WHERE page_id = %s",
 			(self.id,))

@@ -7,11 +7,12 @@ class Element:
 		self.description = row[2]
 		self.selector = row[3]
 		self.page_id = row[4]
+		self.component_id = row[5]
 
 	def insert(self):
 		cursor = database.connection.cursor()
-		cursor.execute("INSERT INTO elements (name, description, selector, page_id) VALUES (%s, %s, %s, %s) RETURNING id", 
-			(self.name, self.description, self.selector, self.page_id))
+		cursor.execute("INSERT INTO elements (name, description, selector, page_id, component_id) VALUES (%s, %s, %s, %s, %s) RETURNING id", 
+			(self.name, self.description, self.selector, self.page_id, self.component_id))
 		database.connection.commit()
 		self.id = cursor.fetchone()[0]
 		cursor.close()
@@ -31,17 +32,3 @@ def select(name):
 	result = cursor.fetchone()
 	cursor.close()
 	return Element(result)
-
-def select_by_page_id(page_id):
-	cursor = database.connection.cursor()
-	cursor.execute("SELECT * FROM elements WHERE page_id = %s",
-		(page_id,))
-	results = []
-	while (1):
-		row = cursor.fetchone()
-		if(row):
-			results.append(Element(row))
-		else:
-			break
-
-	return results
