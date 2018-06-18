@@ -1,7 +1,7 @@
 from . import database, element, page
 
 class Component:
-	def __init__(self, row, pages = []):
+	def __init__(self, row):
 		self.id = row[0]
 		self.name = row[1]
 		self.elements = []

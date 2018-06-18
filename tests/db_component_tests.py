@@ -1,24 +1,23 @@
-import db
+import unittest
+import models.db
 
 class DbComponentTests(unittest.TestCase):
-	def setup(self):
-        database.connect()
-        self.cursor = database.connection.cursor()
 
-	def test_insert_creates_row(self):
-		self.cursor.execute("SELECT Count(*) FROM components")
+    def setUp(self):
+        db.connect()
+        self.cursor = db.connection.cursor()
+
+    def test_insert_creates_row(self):
+        self.cursor.execute("SELECT Count(*) FROM components")
         initial_count = self.cursor.fetchone()[0]
-
         component([None, "Testing"]).insert()
-
         self.cursor.execute("SELECT Count(*) FROM components")
         new_count = self.cursor.fetchone()[0]
         assert (initial_count + 1) == new_count
 
     def test_delete_removes_row(self):
         comp = component([None, "Testing"]).insert()
-
-		self.cursor.execute("SELECT Count(*) FROM components")
+        self.cursor.execute("SELECT Count(*) FROM components")
         initial_count = self.cursor.fetchone()[0]
         comp.delete()
         self.cursor.execute("SELECT Count(*) FROM components")
