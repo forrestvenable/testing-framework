@@ -20,8 +20,10 @@ class Page:
 		cursor = database.connection.cursor()
 		cursor.execute("DELETE FROM elements WHERE component_id IN (SELECT DISTINCT component_id FROM pages_components WHERE page_id = %s)",
 			(self.id,))
-		cursor.execute("DELETE FROM components WHERE page_id = %s",
+		cursor.execute("DELETE FROM elements WHERE page_id = %s",
 			(self.id,))
+		cursor.execute("DELETE FROM pages_components WHERE page_id = %s",
+			(self.id,))		
 		cursor.execute("DELETE FROM pages WHERE id = %s",
 			(self.id,))
 		database.connection.commit()	
@@ -29,18 +31,25 @@ class Page:
 
 	def load_elements(self):
 		cursor = database.connection.cursor()
-		cursor.execute("SELECT * FROM elements WHERE page_id = %s OR component_id IN (SELECT DISTINCT component_id FROM pages_components WHERE page_id = %s)",
-			(self.id, self.id))
-		results = []
+		cursor.execute("SELECT * FROM elements WHERE page_id = %s",
+			(self.id,))
+		self.elements = []
 		while (1):
 			row = cursor.fetchone()
 			if(row):
-				results.append(element.Element(row))
+				self.elements.append(element.Element(row))
 			else:
 				break
 
+ 		cursor.execute("SELECT * FROM elements WHERE component_id IN (SELECT DISTINCT component_id FROM pages_components WHERE page_id = %s)",
+ 			(self.id,))
+		while (1):
+			row = cursor.fetchone()
+			if(row):
+				self.elements.append(element.Element(row))
+			else:
+				break
 
-		self.elements = results
 		return self.elements
 
 def select(name):

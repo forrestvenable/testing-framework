@@ -12,14 +12,14 @@ class DbElementTests(unittest.TestCase):
     def test_insert_adds_one_row(self):
         self.cursor.execute("SELECT Count(*) FROM elements")
         initial_count = self.cursor.fetchone()[0]
-        element([None, "Search", "Search bar", "#id-search-field", None]).insert()
+        element([None, "Search", "Search bar", "#id-search-field", None, None]).insert()
         self.cursor.execute("SELECT Count(*) FROM elements")
         new_count = self.cursor.fetchone()[0]
         assert (initial_count + 1) == new_count
 
     def test_delete_removes_one_row(self):
         self.cursor = database.connection.cursor()
-        webelement = element([None, "Search", "Search bar", "#id-search-field", None]).insert()
+        webelement = element([None, "Search", "Search bar", "#id-search-field", None, None]).insert()
         self.cursor.execute("SELECT Count(*) FROM elements")
         initial_count = self.cursor.fetchone()[0]
         webelement.delete()
@@ -28,7 +28,7 @@ class DbElementTests(unittest.TestCase):
         assert (initial_count - 1) == new_count
 
     def test_insert_only_updates_element_id(self):
-        webelement = element([None, "Search", "Search bar", "#id-search-field", None])
+        webelement = element([None, "Search", "Search bar", "#id-search-field", None, None])
         assert webelement.id == None
         assert webelement.name == "Search"
         assert webelement.description == "Search bar"
@@ -40,7 +40,7 @@ class DbElementTests(unittest.TestCase):
         assert webelement.selector == "#id-search-field"
 
     def test_select_finds_record(self):
-        inserted_element = element([None, "Search", "Search bar", "#id-search-field", None]).insert()
+        inserted_element = element([None, "Search", "Search bar", "#id-search-field", None, None]).insert()
         selected_element = select_element(inserted_element.name)
         assert inserted_element.name == selected_element.name 
         assert inserted_element.description == selected_element.description
@@ -51,6 +51,8 @@ class DbElementTests(unittest.TestCase):
 
     def tearDown(self):
         self.cursor.execute("TRUNCATE TABLE elements")
+        database.connection.commit()
+        self.cursor.execute("TRUNCATE TABLE pages_components")
         database.connection.commit()
         self.cursor.execute("TRUNCATE TABLE components")
         database.connection.commit()
