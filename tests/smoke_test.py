@@ -7,8 +7,8 @@ class SmokeTest(unittest.TestCase):
         driver.connect()
         db.connect()
         self.page = db.page([None, "Homepage","http://www.python.org"]).insert()
-        self.search_bar = db.element([None, "Search", "Search bar", "#id-search-field", self.page.id]).insert()
-        self.search_button = db.element([None, "SearchButton", "Search bar button", ".search-button", self.page.id]).insert()
+        self.search_bar = db.element([None, "Search", "Search bar", "#id-search-field", self.page.id, None]).insert()
+        self.search_button = db.element([None, "SearchButton", "Search bar button", ".search-button", self.page.id, None]).insert()
 
     def runTest(self):
         webpage.WebPage(db.select_page("Homepage")).goto()
