@@ -22,3 +22,9 @@ def delete(request):
     # INSERT QUERY HERE
     db.connection.commit()
     # INSERT HTML HERE
+
+def update(request):
+    cursor = db.connection.cursor()
+    # INSERT QUERY HERE
+    db.connection.commit()
+    # INSERT HTML HERE
