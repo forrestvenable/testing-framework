@@ -7,7 +7,7 @@ def create(request):
     db.connection.commit()
     # INSERT HTML HERE
 
-def show(request):
+def show(request, id):
     cursor = db.connection.cursor()
     # INSERT QUERY HERE
     # INSERT HTML HERE
@@ -17,13 +17,13 @@ def index(request):
     # INSERT QUERY HERE
     # INSERT HTML HERE
 
-def delete(request):
+def delete(request, id):
     cursor = db.connection.cursor()
     # INSERT QUERY HERE
     db.connection.commit()
     # INSERT HTML HERE
 
-def update(request):
+def update(request. id):
     cursor = db.connection.cursor()
     # INSERT QUERY HERE
     db.connection.commit()

@@ -19,23 +19,23 @@ import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    
+
     url(r'^elements', views.elements.index, name='element_index'),
     url(r'^elements/create', views.elements.create, name='element_create'),
-    url(r'^elements/<>', views.elements.show, name='element_show'),
-    url(r'^elements/<>/delete', views.elements.show, name='element_delete'),
-    url(r'^elements/<>/update', views.elements.show, name='element_update'),
+    url(r'^elements/<int:id>', views.elements.show, name='element_show'),
+    url(r'^elements/<int:id>/delete', views.elements.show, name='element_delete'),
+    url(r'^elements/<int:id>/update', views.elements.show, name='element_update'),
 
     url(r'^pages', views.pages.index, name='page_index'),
     url(r'^pages/create', views.pages.create, name='page_create'),
-    url(r'^pages/<>', views.pages.show, name='page_show'),
-    url(r'^pages/<>/delete', views.pages.show, name='page_delete'),
-    url(r'^pages/<>/update', views.pages.show, name='page_update'),
+    url(r'^pages/<int:id>', views.pages.show, name='page_show'),
+    url(r'^pages/<int:id>/delete', views.pages.show, name='page_delete'),
+    url(r'^pages/<int:id>/update', views.pages.show, name='page_update'),
 
     url(r'^components', views.components.index, name='component_index'),
     url(r'^components/create', views.components.create, name='component_create'),
-    url(r'^components/<>', views.components.show, name='component_show'),
-    url(r'^components/<>/delete', views.components.show, name='component_delete'),
-    url(r'^components/<>/update', views.components.show, name='component_update'),
+    url(r'^components/<int:id>', views.components.show, name='component_show'),
+    url(r'^components/<int:id>/delete', views.components.show, name='component_delete'),
+    url(r'^components/<int:id>/update', views.components.show, name='component_update'),
 ]
 
