@@ -3,28 +3,34 @@ from django.http import HttpResponse
 
 def create(request):
     cursor = db.connection.cursor()
-    # INSERT QUERY HERE
+    cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
+        (request.POST.name, request.POST.url))
     db.connection.commit()
     # INSERT HTML HERE
 
-def show(request, id):
+def show(request, page_id):
     cursor = db.connection.cursor()
-    # INSERT QUERY HERE
+    cursor.execute("SELECT * FROM pages WHERE id = %s LIMIT 1",
+        (page_id,))
+    page = db.page(cursor.fetchone())
     # INSERT HTML HERE
 
 def index(request):
     cursor = db.connection.cursor()
-    # INSERT QUERY HERE
+    cursor.execute("SELECT * FROM pages")
+    pages = map(db.page, cursor.fetchall())
     # INSERT HTML HERE
 
-def delete(request, id):
+def delete(request, page_id):
     cursor = db.connection.cursor()
-    # INSERT QUERY HERE
+    cursor.execute("DELETE FROM pages WHERE id = %s",
+        (page_id,))
     db.connection.commit()
     # INSERT HTML HERE
 
-def update(request. id):
+def update(request. page_id):
     cursor = db.connection.cursor()
-    # INSERT QUERY HERE
+    cursor.execute("UPDATE components SET name = %s, url = %s WHERE id = %s",
+        (request.POST.name, request.POST.url, page_id))
     db.connection.commit()
     # INSERT HTML HERE
