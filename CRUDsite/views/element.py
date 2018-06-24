@@ -1,9 +1,10 @@
 from models import db
 from django.http import HttpResponse
+from forms import element
 
 def create(request):
     if request.method == 'GET':
-        pass
+        return render(request, 'element.html', {'form': element.CreateForm()})
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()
