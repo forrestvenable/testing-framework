@@ -2,11 +2,15 @@ from models import db
 from django.http import HttpResponse
 
 def create(request):
-    cursor = db.connection.cursor()
-    cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
-        (request.POST.name, request.POST.url))
-    db.connection.commit()
-    return HttpResponse("Created!")
+    if request.method == 'GET':
+        pass
+
+    elif request.method == 'POST':
+        cursor = db.connection.cursor()
+        cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
+            (request.POST.name, request.POST.url))
+        db.connection.commit()
+        return HttpResponse("Created!")
 
 def show(request, page_id):
     cursor = db.connection.cursor()
@@ -29,8 +33,12 @@ def delete(request, page_id):
     return HttpResponse("Deleted!")
 
 def update(request. page_id):
-    cursor = db.connection.cursor()
-    cursor.execute("UPDATE components SET name = %s, url = %s WHERE id = %s",
-        (request.POST.name, request.POST.url, page_id))
-    db.connection.commit()
-    return HttpResponse("Updated!")
+    if request.method == 'GET':
+        pass
+
+    elif request.method == 'POST':
+        cursor = db.connection.cursor()
+        cursor.execute("UPDATE components SET name = %s, url = %s WHERE id = %s",
+            (request.POST.name, request.POST.url, page_id))
+        db.connection.commit()
+        return HttpResponse("Updated!")

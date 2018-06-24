@@ -2,11 +2,15 @@ from models import db
 from django.http import HttpResponse
 
 def create(request):
-    cursor = db.connection.cursor()
-    cursor.execute("INSERT INTO elements (name, description, selector) VALUES (%s, %s, %s)",
-        (request.POST.name, request.POST.description, request.POST.selector))
-    db.connection.commit()
-    return HttpResponse("Created!")
+    if request.method == 'GET':
+        pass
+
+    elif request.method == 'POST':
+        cursor = db.connection.cursor()
+        cursor.execute("INSERT INTO elements (name, description, selector) VALUES (%s, %s, %s)",
+            (request.POST.name, request.POST.description, request.POST.selector))
+        db.connection.commit()
+        return HttpResponse("Created!")
 
 def show(request, element_id):
     cursor = db.connection.cursor()
@@ -29,8 +33,12 @@ def delete(request, element_id):
     return HttpResponse("Deleted!")
 
 def update(request. element_id):
-    cursor = db.connection.cursor()
-    cursor.execute("UPDATE elements SET name = %s, description = %s, selector = %s WHERE id = %s",
-        (request.POST.name, request.POST.description, request.POST.selector, element_id))
-    db.connection.commit()
-    return HttpResponse("Updated!")
+    if request.method == 'GET':
+        pass
+
+    elif request.method == 'POST':
+        cursor = db.connection.cursor()
+        cursor.execute("UPDATE elements SET name = %s, description = %s, selector = %s WHERE id = %s",
+            (request.POST.name, request.POST.description, request.POST.selector, element_id))
+        db.connection.commit()
+        return HttpResponse("Updated!")
