@@ -6,31 +6,31 @@ def create(request):
     cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
         (request.POST.name, request.POST.url))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Created!")
 
 def show(request, page_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM pages WHERE id = %s LIMIT 1",
         (page_id,))
     page = db.page(cursor.fetchone())
-    # INSERT HTML HERE
+    return HttpResponse(page.to_json())
 
 def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM pages")
     pages = map(db.page, cursor.fetchall())
-    # INSERT HTML HERE
+    return HttpResponse(json.dumps(pages.__dict__))
 
 def delete(request, page_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM pages WHERE id = %s",
         (page_id,))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Deleted!")
 
 def update(request. page_id):
     cursor = db.connection.cursor()
     cursor.execute("UPDATE components SET name = %s, url = %s WHERE id = %s",
         (request.POST.name, request.POST.url, page_id))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Updated!")

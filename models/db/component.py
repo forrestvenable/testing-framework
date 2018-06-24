@@ -60,3 +60,6 @@ class Component:
         cursor.execute("INSERT INTO pages_components (page_id, component_id) VALUES (%s, %s)",
             (webpage.id, self.id))
         database.connection.commit()
+
+    def to_json(self):
+        return json.dumps(self.__dict__)

@@ -6,31 +6,31 @@ def create(request):
     cursor.execute("INSERT INTO elements (name, description, selector) VALUES (%s, %s, %s)",
         (request.POST.name, request.POST.description, request.POST.selector))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Created!")
 
 def show(request, element_id):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM elements WHERE id = %s LIMIT 1",
         (element_id,))
     element = db.element(cursor.fetchone())
-    # INSERT HTML HERE
+    return HttpResponse(element.to_json())
 
 def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM elements")
     elements = map(db.element, cursor.fetchall())
-    # INSERT HTML HERE
+    return HttpResponse(json.dumps(elements.__dict__))
 
 def delete(request, element_id):
     cursor = db.connection.cursor()
     cursor.execute("DELETE FROM elements WHERE id = %s",
         (element_id,))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Deleted!")
 
 def update(request. element_id):
     cursor = db.connection.cursor()
     cursor.execute("UPDATE elements SET name = %s, description = %s, selector = %s WHERE id = %s",
         (request.POST.name, request.POST.description, request.POST.selector, element_id))
     db.connection.commit()
-    # INSERT HTML HERE
+    return HttpResponse("Updated!")

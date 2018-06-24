@@ -24,6 +24,9 @@ class Element:
 			(self.id,))
 		database.connection.commit()
 		cursor.close()
+		
+    def to_json(self):
+        return json.dumps(self.__dict__)
 
 def select(name):
 	cursor = database.connection.cursor()

@@ -52,6 +52,9 @@ class Page:
 
 		return self.elements
 
+	def to_json(self):
+        return json.dumps(self.__dict__)
+
 def select(name):
 	cursor = database.connection.cursor()
 	cursor.execute("SELECT * FROM pages WHERE name = %s LIMIT 1",
