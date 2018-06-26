@@ -1,4 +1,5 @@
 from . import database
+import json
 
 class Element:
 	def __init__(self, row):
@@ -25,8 +26,8 @@ class Element:
 		database.connection.commit()
 		cursor.close()
 		
-    def to_json(self):
-        return json.dumps(self.__dict__)
+	def to_json(self):
+		return json.dumps(self.__dict__)
 
 def select(name):
 	cursor = database.connection.cursor()

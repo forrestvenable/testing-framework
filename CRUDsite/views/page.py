@@ -1,6 +1,7 @@
 from models import db
 from django.http import HttpResponse
 from forms import page
+import json
 
 def create(request):
     if request.method == 'GET':
@@ -24,7 +25,7 @@ def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM pages")
     pages = map(db.page, cursor.fetchall())
-    return HttpResponse(json.dumps(pages.__dict__))
+    return HttpResponse(json.dumps(map(lambda x: x.__dict__, pages)))
 
 def delete(request, page_id):
     cursor = db.connection.cursor()
@@ -33,9 +34,12 @@ def delete(request, page_id):
     db.connection.commit()
     return HttpResponse("Deleted!")
 
-def update(request. page_id):
+def update(request, page_id):
     if request.method == 'GET':
-        pass
+        cursor = db.connection.cursor()
+        cursor.execute("SELECT * FROM pages WHERE id = %s",
+        (page_id,))
+        page = db.page(cursor.fetchone())
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()

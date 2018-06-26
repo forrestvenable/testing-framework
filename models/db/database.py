@@ -12,3 +12,5 @@ def disconnect():
 	global connection
 	connection.close()
 	connection = None
+
+connect()

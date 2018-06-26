@@ -1,4 +1,5 @@
 from . import database, element, page
+import json
 
 class Component:
     def __init__(self, row):

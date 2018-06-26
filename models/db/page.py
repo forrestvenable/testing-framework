@@ -1,4 +1,5 @@
 from . import database, element
+import json
 
 class Page:
 	def __init__(self, row):
@@ -53,7 +54,7 @@ class Page:
 		return self.elements
 
 	def to_json(self):
-        return json.dumps(self.__dict__)
+	    return json.dumps(self.__dict__)
 
 def select(name):
 	cursor = database.connection.cursor()
