@@ -5,7 +5,12 @@ import json
 
 def create(request):
     if request.method == 'GET':
-        return render(request, 'component.html', {'form': component.CreateForm()})
+        return render(request, 'create.html', {
+            'form': component.CreateForm(),
+            'type': 'component',
+            'action': 'create',
+            'method': 'POST'
+            })
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()
@@ -25,7 +30,11 @@ def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM components")
     components = map(db.component, cursor.fetchall())
-    return HttpResponse(json.dumps(map(lambda x: x.__dict__, components)))
+    return render(request, 'index.html'. {
+        'type': 'component',
+        'item_list': components,
+        'keys': list(components[0].keys()),
+        })
 
 def delete(request, component_id):
     cursor = db.connection.cursor()

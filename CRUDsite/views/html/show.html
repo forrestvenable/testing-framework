@@ -1,0 +1,4 @@
+<h1>{{item.name}}</h1>
+{% for key in keys%}
+<div>{{key}}: {{item.get(key)}}</div>
+{% endfor%}

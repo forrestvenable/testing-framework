@@ -5,14 +5,19 @@ import json
 
 def create(request):
     if request.method == 'GET':
-        return render(request, 'page.html', {'form': page.CreateForm()})
+        return render(request, 'create.html', {
+            'form': page.CreateForm(),
+            'type': 'page',
+            'action': 'create',
+            'method': 'POST'
+            })
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()
         cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
             (request.POST.name, request.POST.url))
         db.connection.commit()
-        return HttpResponse("Created!")
+        return HttpResponse(status=201)
 
 def show(request, page_id):
     cursor = db.connection.cursor()
@@ -25,7 +30,11 @@ def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM pages")
     pages = map(db.page, cursor.fetchall())
-    return HttpResponse(json.dumps(map(lambda x: x.__dict__, pages)))
+    return render(request, 'index.html'. {
+        'type': 'pages',
+        'item_list': pages,
+        'keys': list(pages[0].keys()),
+        })
 
 def delete(request, page_id):
     cursor = db.connection.cursor()
