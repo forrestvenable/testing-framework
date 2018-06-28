@@ -49,6 +49,13 @@ def update(request, element_id):
         cursor.execute("SELECT * FROM elements WHERE id = %s",
         (element_id,))
         elem = db.element(cursor.fetchone())
+        form = element.CreateForm(initials={'name': elem.name, 'description': elem.description, 'selector': elem.selector})
+        return render(request, 'create.html', {
+            'form': form,
+            'type': 'element',
+            'action': 'update',
+            'method': 'POST'
+            })
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()

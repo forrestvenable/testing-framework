@@ -48,7 +48,14 @@ def update(request, page_id):
         cursor = db.connection.cursor()
         cursor.execute("SELECT * FROM pages WHERE id = %s",
         (page_id,))
-        page = db.page(cursor.fetchone())
+        page_db = db.page(cursor.fetchone())
+        form = page.CreateForm(initials={'name': page_db.name, 'url': page_db.url})
+        return render(request, 'create.html', {
+            'form': form,
+            'type': 'page',
+            'action': 'update',
+            'method': 'POST'
+            })
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()

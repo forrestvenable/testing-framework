@@ -48,7 +48,14 @@ def update(request, component_id):
         cursor = db.connection.cursor()
         cursor.execute("SELECT * FROM components WHERE id = %s",
         (component_id,))
-        comp = db.component(cursor.fetchone())    
+        comp = db.component(cursor.fetchone())   
+        form = component.CreateForm(initials={"name": comp.name})
+        return render(request, 'create.html', {
+            'form': form,
+            'type': 'component',
+            'action': 'create',
+            'method': 'POST'
+            }) 
 
     elif request.method == 'POST':
         cursor = db.connection.cursor()
