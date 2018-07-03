@@ -17,6 +17,7 @@ def create(request):
         cursor.execute("INSERT INTO pages (name, url) VALUES (%s, %s)",
             (request.POST.name, request.POST.url))
         db.connection.commit()
+        cursor.close()
         return HttpResponse(status=201)
 
 def show(request, page_id):
@@ -30,6 +31,7 @@ def show(request, page_id):
     cursor.execute("SELECT id, name, description, selector FROM elements WHERE page_id = %s",
         (page_id,))
     elements = map(db.element, cursor.fetchall())
+    cursor.close()
     return render(request, 'show.html', {
         'item': component,
         'keys': component.properties(),
@@ -40,6 +42,7 @@ def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM pages")
     pages = map(db.page, cursor.fetchall())
+    cursor.close()
     return render(request, 'index.html'. {
         'type': 'pages',
         'item_list': pages,
@@ -51,6 +54,7 @@ def delete(request, page_id):
     cursor.execute("DELETE FROM pages WHERE id = %s",
         (page_id,))
     db.connection.commit()
+    cursor.close()
     return HttpResponse("Deleted!")
 
 def update(request, page_id):
@@ -60,6 +64,7 @@ def update(request, page_id):
         (page_id,))
         page_db = db.page(cursor.fetchone())
         form = page.CreateForm(initials={'name': page_db.name, 'url': page_db.url})
+        cursor.close()
         return render(request, 'create.html', {
             'form': form,
             'type': 'page',
@@ -72,4 +77,5 @@ def update(request, page_id):
         cursor.execute("UPDATE components SET name = %s, url = %s WHERE id = %s",
             (request.POST.name, request.POST.url, page_id))
         db.connection.commit()
+        cursor.close()
         return HttpResponse("Updated!")

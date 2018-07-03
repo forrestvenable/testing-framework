@@ -17,6 +17,7 @@ def create(request):
         cursor.execute("INSERT INTO components (name) VALUES (%s)",
             (request.POST.name,))
         db.connection.commit()
+        cursor.close()
         return HttpResponse("Created!")
 
 def show(request, component_id):
@@ -30,6 +31,7 @@ def show(request, component_id):
     cursor.execute("SELECT id, name, description, selector FROM elements WHERE component_id = %s",
         (component_id,))
     children = db.element(cursor.fetchall())
+    cursor.close()
     return render(request, 'show.html', {
         'item': component,
         'keys': component.properties(),
@@ -40,6 +42,7 @@ def index(request):
     cursor = db.connection.cursor()
     cursor.execute("SELECT * FROM components")
     components = map(db.component, cursor.fetchall())
+    cursor.close()
     return render(request, 'index.html'. {
         'type': 'component',
         'item_list': components,
@@ -51,6 +54,7 @@ def delete(request, component_id):
     cursor.execute("DELETE FROM components WHERE id = %s",
         (component_id,))
     db.connection.commit()
+    cursor.close()
     return HttpResponse("Deleted!")
 
 def update(request, component_id):
@@ -60,6 +64,7 @@ def update(request, component_id):
         (component_id,))
         comp = db.component(cursor.fetchone())   
         form = component.CreateForm(initials={"name": comp.name})
+        cursor.close()
         return render(request, 'create.html', {
             'form': form,
             'type': 'component',
@@ -72,4 +77,5 @@ def update(request, component_id):
         cursor.execute("UPDATE components SET name = %s WHERE id = %s",
             (request.POST.name, component_id))
         db.connection.commit()
+        cursor.close()
         return HttpResponse("Updated!")
