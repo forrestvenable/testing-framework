@@ -29,6 +29,9 @@ class Element:
 	def to_json(self):
 		return json.dumps(self.__dict__)
 
+    def properties(self):
+        return ('id', 'name', 'description', 'selector')
+
 def select(name):
 	cursor = database.connection.cursor()
 	cursor.execute("SELECT * FROM elements WHERE name = %s LIMIT 1",

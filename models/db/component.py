@@ -64,3 +64,6 @@ class Component:
 
     def to_json(self):
         return json.dumps(self.__dict__)
+
+    def properties(self):
+        return ('id', 'name')

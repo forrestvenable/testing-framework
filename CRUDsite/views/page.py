@@ -24,7 +24,17 @@ def show(request, page_id):
     cursor.execute("SELECT * FROM pages WHERE id = %s LIMIT 1",
         (page_id,))
     page = db.page(cursor.fetchone())
-    return HttpResponse(page.to_json())
+    cursor.execute("SELECT id, name FROM components INNER JOIN pages_components ON component.id = pages_components.component_id WHERE pages_components.page_id=%s",
+        (page_id,))
+    components = db.component(cursor.fetchall())
+    cursor.execute("SELECT id, name, description, selector FROM elements WHERE page_id = %s",
+        (page_id,))
+    elements = map(db.element, cursor.fetchall())
+    return render(request, 'show.html', {
+        'item': component,
+        'keys': component.properties(),
+        'relationships': (components, elements),
+        })
 
 def index(request):
     cursor = db.connection.cursor()
